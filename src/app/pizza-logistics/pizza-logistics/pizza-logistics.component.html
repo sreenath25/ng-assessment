@@ -1,0 +1,185 @@
+<mat-card class="example-card">
+    <mat-card-title>
+        <div>New Order</div>
+    </mat-card-title>
+    <mat-card-content>
+        <mat-grid-list cols="4" rowHeight="70px">
+            <form *ngIf="ordersForm" class="example-form" [formGroup]="ordersForm" (ngSubmit)="placeOrder()">
+                <mat-grid-tile>
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Customer Name</mat-label>
+                        <input matInput placeholder="Customer Name" formControlName="customerName" />
+
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <mat-label>Toppings</mat-label>
+                        <mat-select formControlName="toppings" multiple>
+                            <mat-option *ngFor="let tpng of toppings" [value]="tpng.id">
+                                {{tpng.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <mat-label>Size</mat-label>
+                        <select formControlName="size" matNativeControl>
+                            <option value="" selected></option>
+                            <option value="1">Small</option>
+                            <option value="2">Medium</option>
+                            <option value="3">Large</option>
+                        </select>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <button mat-raised-button color="warn" type="submit">Place Order</button>
+                </mat-grid-tile>
+            </form>
+        </mat-grid-list>
+    </mat-card-content>
+</mat-card>
+
+<!--Open Orders Card Start-->
+<mat-card class="example-card">
+    <mat-card-title>
+        <div>Open Orders</div>
+    </mat-card-title>
+    <mat-card-content>
+        <mat-grid-list cols="3" rowHeight="40px">
+            <mat-grid-tile>
+                <span>Order Number</span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span flex md-truncate>Toppings</span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+            </mat-grid-tile>
+            <div *ngFor="let order of orders | pizzaFilter:'state': PizzaState.open">
+                <mat-grid-tile>
+                    <mat-form-field class="example-full-width">
+                        <input matInput placeholder="" [value]="order.id" [readonly]="true" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field class="example-full-width">
+                        <input matInput placeholder="" [value]="order.toppingNames" [readonly]="true" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <button mat-raised-button class="buttonColor" (click)="preparePizza(order)">Send to Kitchen</button>
+                </mat-grid-tile>
+            </div>
+        </mat-grid-list>
+    </mat-card-content>
+</mat-card>
+<!--Open Orders Card end-->
+
+
+
+<mat-card class="example-card">
+    <mat-card-title>
+        <div>Ready for Delivery</div>
+    </mat-card-title>
+    <mat-card-content>
+        <mat-grid-list cols="3" rowHeight="60px">
+            <mat-grid-tile>
+                <span>Order Number</span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span>Driver</span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+            </mat-grid-tile>
+            <div *ngFor="let order of orders | pizzaFilter:'state': PizzaState.ready">
+                <mat-grid-tile>
+                    <mat-form-field class="example-full-width">
+                        <input matInput placeholder="" [value]="order.id" [readonly]="true" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <mat-label>Driver</mat-label>
+                        <mat-select #selectDriver>
+                            <mat-option *ngFor="let driver of drivers" [value]="driver.id">
+                                {{driver.firstName + ' '+driver.lastName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <button mat-raised-button class="buttonColor" (click)="assignDriver(order)">Assign</button>
+                </mat-grid-tile>
+            </div>
+        </mat-grid-list>
+    </mat-card-content>
+</mat-card>
+<mat-card class="example-card">
+    <mat-card-title>
+        <div>Ready For Delivery</div>
+    </mat-card-title>
+    <mat-card-content>
+        <mat-grid-list cols="3" rowHeight="40px">
+            <mat-grid-tile>
+                <span>Order Number</span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span>Toppings</span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+            </mat-grid-tile>
+            <div *ngFor="let order of orders | pizzaFilter:'state': PizzaState.ready">
+                <mat-grid-tile>
+                    <input matInput placeholder="" [value]="order.id" [readonly]="true" />
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <button mat-button color="warn">Assign</button>
+                </mat-grid-tile>
+            </div>
+        </mat-grid-list>
+    </mat-card-content>
+</mat-card>
+
+<mat-card class="example-card">
+    <mat-card-title>
+        <div>Delivered</div>
+    </mat-card-title>
+    <mat-card-content>
+        <mat-grid-list cols="3" rowHeight="40px">
+            <mat-grid-tile>
+                <span>Order Number</span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span>Toppings</span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span>Driver</span>
+            </mat-grid-tile>
+            <div *ngFor="let order of orders| pizzaFilter:'state': PizzaState.delivered">
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <span>{{order.id}}</span>
+                        <input matInput placeholder="" [value]="order.id" [readonly]="true" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <div class="topping-names">
+                        <mat-form-field>
+                            <input matInput placeholder="" [value]="order.toppingNames" [readonly]="true" />
+                        </mat-form-field>
+                    </div>
+                </mat-grid-tile>
+                <div>
+                    <mat-grid-tile>
+                        <span>          </span>
+                    </mat-grid-tile>
+                </div>
+            </div>
+        </mat-grid-list>
+    </mat-card-content>
+</mat-card> 
+ 

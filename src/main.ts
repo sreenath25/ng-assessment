@@ -1,17 +1,16 @@
 import 'hammerjs';
 import { enableProdMode, ViewEncapsulation } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import {hmrBootstrap} from './hmr';
-
 if (environment.production) {
   enableProdMode();
 }
 
 const bootstrap = () => platformBrowserDynamic().bootstrapModule(AppModule, {
-    defaultEncapsulation: ViewEncapsulation.Native
+    // defaultEncapsulation: ViewEncapsulation.Native
+    defaultEncapsulation: ViewEncapsulation.Emulated 
 });
 
 if (environment.hmr) {
@@ -24,5 +23,3 @@ if (environment.hmr) {
 } else {
    bootstrap().catch(err => console.log(err));
 }
-
-
